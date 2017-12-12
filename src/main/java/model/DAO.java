@@ -9,8 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 
 /**
@@ -178,4 +181,92 @@ public class DAO {
         }
         return result;
     }
+    
+    /**
+         * 
+         * @return
+         * @throws SQLException 
+         */
+        public Map<String, Double> salesByCustomer() throws SQLException {
+		Map<String, Double> result = new HashMap<>();
+		String sql = "SELECT NAME, SUM(PURCHASE_COST * QUANTITY) AS SALES" +
+		"	      FROM CUSTOMER c"+
+                "             INNER JOIN PURCHASE_ORDER o ON (o.CUSTOMER_ID = c.CUSTOMER_ID)"+
+		"	      INNER JOIN PRODUCT p ON (o.PRODUCT_ID = p.PRODUCT_ID)" +
+		"	      GROUP BY NAME";
+                /*
+                "SELECT NAME, SUM(PURCHASE_COST * QUANTITY) AS SALES" +
+		"	      FROM CUSTOMER c" +
+		"	      INNER JOIN PURCHASE_ORDER o ON (? <= o.SALES_DATE" +
+                "             AND  o.SALES_DATE <= ?)" +
+		"	      INNER JOIN PRODUCT p ON (o.PRODUCT_ID = p.PRODUCT_ID)" +
+		"	      GROUP BY NAME"
+                */
+		try (Connection connection = myDataSource.getConnection(); 
+		     PreparedStatement stmt = connection.prepareStatement(sql);
+		     ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+				// On récupère les champs nécessaires de l'enregistrement courant
+				String name = rs.getString("NAME");
+				double sales = rs.getDouble("SALES");
+				// On l'ajoute à la liste des résultats
+				result.put(name, sales);
+			}
+		}
+		return result;
+	}
+        
+        /**
+         * 
+         * @return
+         * @throws SQLException 
+         */
+        public Map<String, Double> salesByState() throws SQLException {
+		Map<String, Double> result = new HashMap<>();
+                String dateDeb = null;
+                String dateFin = null;
+		String sql = "SELECT STATE, SUM(PURCHASE_COST * QUANTITY) AS SALES FROM CUSTOMER c\n" +
+                             "INNER JOIN PURCHASE_ORDER o ON (c.CUSTOMER_ID = o.CUSTOMER_ID)\n" +
+                             "INNER JOIN PRODUCT p ON (o.PRODUCT_ID = p.PRODUCT_ID)\n" +
+                             "GROUP BY STATE";
+		try (Connection connection = myDataSource.getConnection(); 
+		     PreparedStatement stmt = connection.prepareStatement(sql); 
+		     ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+				// On récupère les champs nécessaires de l'enregistrement courant
+				String state = rs.getString("STATE");
+				double sales = rs.getDouble("SALES");
+				// On l'ajoute à la liste des résultats
+				result.put(state, sales);
+			}
+		}
+		return result;
+	}
+        
+        /**
+         * 
+         * @return
+         * @throws SQLException 
+         */
+        public Map<String, Double> salesByCategory() throws SQLException {
+		Map<String, Double> result = new HashMap<>();
+                String dateDeb = null;
+                String dateFin = null;
+		String sql = "SELECT PROD_CODE, SUM(PURCHASE_COST * QUANTITY) AS SALES FROM PRODUCT_CODE c\n" +
+                             "INNER JOIN PRODUCT p ON (p.PRODUCT_CODE = c.PROD_CODE)\n" +
+                             "INNER JOIN PURCHASE_ORDER po ON (p.PRODUCT_ID = po.PRODUCT_ID)\n" +
+                             "GROUP BY PROD_CODE";
+		try (Connection connection = myDataSource.getConnection(); 
+		     PreparedStatement stmt = connection.prepareStatement(sql); 
+		     ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+				// On récupère les champs nécessaires de l'enregistrement courant
+				String name = rs.getString("PROD_CODE");
+				double sales = rs.getDouble("SALES");
+				// On l'ajoute à la liste des résultats
+				result.put(name, sales);
+			}
+		}
+		return result;
+	}
 }
