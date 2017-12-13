@@ -12,10 +12,10 @@
                 padding-bottom: 30%;
                 font-family: Verdana, Geneva, sans-serif;
                 margin-top:20%;
-                background: -webkit-linear-gradient(bottom right, #046380, white);
-                background: -o-linear-gradient(bottom right, #046380, white);
-                background: -moz-linear-gradient(bottom right, #046380, white);
-                background: linear-gradient(to bottom right, #046380, white);
+                background: -webkit-linear-gradient(bottom right, #E3B621, white);
+                background: -o-linear-gradient(bottom right, #E3B621, white);
+                background: -moz-linear-gradient(bottom right, #E3B621, white);
+                background: linear-gradient(to bottom right, #E3B621, white);
                
             }
             #errorMessage{
@@ -25,7 +25,7 @@
                 margin-top: 2%;
                 background: none;
                 border: none;
-                background-color: #4075A4;
+                background-color: orange;
                 padding: 10px;
                 box-shadow : 2px 2px 2px #82909D;
             }

@@ -44,7 +44,7 @@
             #connectButton {
                 background: none;
                 border: none;
-                background-color: #4075A4;
+                background-color: orange;
                 padding: 10px;
                 box-shadow : 2px 2px 2px #82909D;
                 position: relative;
