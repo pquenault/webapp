@@ -39,10 +39,10 @@ public class ApplicationListener implements ServletContextListener {
         DAO dao = new DAO(DataSourceFactory.getDataSource());
         try {
             List<DiscountCode> discountCodes = dao.getDiscountCodes();
-            Logger.getLogger("Customer").log(Level.INFO, "Database already exists");
+            Logger.getLogger("appController").log(Level.INFO, "Database already exists");
             result = true;
         } catch (SQLException ex) {
-            Logger.getLogger("Customer").log(Level.INFO, "Database does not exist");
+            Logger.getLogger("appController").log(Level.INFO, "Database does not exist");
         }
         return result;
     }
@@ -53,17 +53,17 @@ public class ApplicationListener implements ServletContextListener {
             public void write(int b) {
             }
         };
-        Logger.getLogger("Customer").log(Level.INFO, "Creating databse from SQL script");
+        Logger.getLogger("appController").log(Level.INFO, "Creating databse from SQL script");
         try {
             Connection connection = DataSourceFactory.getDataSource().getConnection();
             int result = ij.runScript(connection, this.getClass().getResourceAsStream("export.sql"), "UTF-8", System.out, "UTF-8");
             if (result == 0) {
-                Logger.getLogger("Customer").log(Level.INFO, "Database succesfully created");
+                Logger.getLogger("appController").log(Level.INFO, "Database succesfully created");
             } else {
-                Logger.getLogger("Customer").log(Level.SEVERE, "Errors creating database");
+                Logger.getLogger("appController").log(Level.SEVERE, "Errors creating database");
             }
         } catch (UnsupportedEncodingException | SQLException e) {
-            Logger.getLogger("Customer").log(Level.SEVERE, null, e);
+            Logger.getLogger("appController").log(Level.SEVERE, null, e);
         }
     }
 }
