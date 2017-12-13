@@ -25,9 +25,25 @@
             table {
                 box-shadow : 2px 2px 2px grey;
             }
+            a:link {
+                color : black;
+                background-color : lightgrey;
+                text-decoration : none;
+                font-weight: bold;
+            }
+            a:hover {
+                color : red;
+                background-color : #f2f2f2;
+                text-decoration : underline;
+            }
         </style>
     </head>
     <body>
+        <div>
+            <form action="<c:url value="appController"/>" method="GET">
+                <button type="submit" name="action" value="logOut">Se déconnecter</button>
+            </form>
+        </div>
         <h1>Votre compte</h1>
 
         <div>
@@ -110,7 +126,7 @@
                         <td>${purchaseOrder.shippingDate}</td>
                         <td>${purchaseOrder.freightCompany}</td>
                         <td>
-                            <a href="?action=DELETE&orderNum=${purchaseOrder.orderNum}&quantity=${purchaseOrder.quantity}&productId=${purchaseOrder.productId}">Supprimer</a>
+                            <a href="?action=delete&orderNum=${purchaseOrder.orderNum}&quantity=${purchaseOrder.quantity}&productId=${purchaseOrder.productId}">Supprimer</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -118,7 +134,7 @@
         </div>
 
         <%--  On montre un éventuel message d'erreur --%>
-        <div><p>${message}</p></div>
+        <div><p style="color: red">${message}</p></div>
 
         <div>
             <h2>Catalogue</h2>
@@ -136,8 +152,9 @@
                         <th>Prix à l'unité</th>
                         <th>Remise</th>
                         <th>Prix remisé</th>
-                        <th>Disponible</th>
                         <th>Quantité disponible</th>
+                        <th>Quantité souhaité</th>
+                        <th>Go !</th>
                     </tr>
                     <c:forEach var="product" items="${products}">
                         <c:if test="${productCode.productCodeId == product.productCodeId}">
@@ -163,13 +180,20 @@
                                                       minFractionDigits="0" maxFractionDigits="2"
                                                       minIntegerDigits="0" />
                                 </td>
-                                <c:if test="${product.available == 'TRUE'}">
-                                    <td style="background-color: green">Oui</td>
-                                </c:if>
-                                <c:if test="${product.available == 'FALSE'}">
-                                    <td style="background-color: red">Non</td>
-                                </c:if>
                                 <td>${product.quantityOnHand}</td>
+                                <c:if test="${product.available == 'TRUE'}">
+                                <form action="<c:url value="appController?productId=${product.productId}"/>" method="POST">
+                                    <td>
+                                        <input type="number" name="quantity" min="1" max="${product.quantityOnHand}" required="true">
+                                    </td>
+                                    <td>
+                                        <button type="submit" name="action" value="add">Passer commande</button>
+                                    </td>
+                                </form>
+                            </c:if>
+                            <c:if test="${product.available == 'FALSE'}">
+                                <td colspan="2" style="text-align: center">Produit indisponible</td>
+                            </c:if>
                             </tr>
                         </c:if>
                     </c:forEach>

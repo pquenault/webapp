@@ -1,28 +1,32 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
     <head>
         <title>Visualisation Google</title>
-        <!-- On charge JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <!-- On charge l'API Google -->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">
-            google.load("visualization", "1", {packages: ["corechart"]});
-            // AprÃ¨s le chargement de la page, on fait l'appel AJAX
 
-            google.setOnLoadCallback(doAjaxArticleCat);
-            google.setOnLoadCallback(doAjaxGeo);
-            google.setOnLoadCallback(doAjaxCustomer);
+            google.charts.load('current', {'packages': ['corechart']});
+            google.load("visualization", "1", {packages: ["corechart"]});
+
+            // Exécuté à la fin du chargement de la page
+            $(document).ready(
+                    function () {
+                        doAjaxArticleCat();
+                        doAjaxGeo();
+                        doAjaxCustomer;
+                    }
+            );
 
             // Fonction draw par catÃ©gorie d'article
             function drawArticleCat(dataArray) {
                 var data = google.visualization.arrayToDataTable(dataArray);
                 var options = {
-                    title: 'CA par catÃ©gorie',
+                    title: "CA par catégorie",
                     is3D: false
                 };
                 var chart = new google.visualization.PieChart(document.getElementById('piechartArticleCat'));
@@ -33,7 +37,7 @@
             function drawGeo(dataArray) {
                 var data = google.visualization.arrayToDataTable(dataArray);
                 var options = {
-                    title: 'CA par zone gÃ©ographique',
+                    title: "CA par zone géographique",
                     is3D: false
                 };
                 var chart = new google.visualization.PieChart(document.getElementById('piechartGeo'));
@@ -44,7 +48,7 @@
             function drawCustomer(dataArray) {
                 var data = google.visualization.arrayToDataTable(dataArray);
                 var options = {
-                    title: 'CA par clients',
+                    title: "CA par client",
                     is3D: false
                 };
                 var chart = new google.visualization.PieChart(document.getElementById('piechartCustomer'));
@@ -56,7 +60,8 @@
                 $.ajax({
                     // serialize() renvoie tous les paramÃ¨tres saisis dans le formulaire
                     //data: $("#codeForm").serialize(),
-                    url: "admin",
+                    data: {"action": "category"},
+                    url: "appController",
                     dataType: "json",
                     success: // La fonction qui traite les rÃ©sultats
                             function (result) {
@@ -78,8 +83,8 @@
             function doAjaxGeo() {
                 $.ajax({
                     // serialize() renvoie tous les paramÃ¨tres saisis dans le formulaire
-                    //data: $("#codeForm").serialize(),
-                    url: "admin",
+                    data: {"action": "state"},
+                    url: "appController",
                     dataType: "json",
                     success: // La fonction qui traite les rÃ©sultats
                             function (result) {
@@ -102,7 +107,8 @@
                 $.ajax({
                     // serialize() renvoie tous les paramÃ¨tres saisis dans le formulaire
                     //data: $("#codeForm").serialize(),
-                    url: "admin",
+                    data: {"action": "customer"},
+                    url: "appController",
                     dataType: "json",
                     success: // La fonction qui traite les rÃ©sultats
                             function (result) {
@@ -127,42 +133,43 @@
             }
 
         </script>
-        <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-    <center>
-        <body>
-            <!-- pÃ©riode (date de dÃ©but / date de fin) sur laquelle doit porter
-    la statistique. -->
-            <h1>
-                <b>PAGE ADMINISTRATEUR</b>
-            </h1>
-            <form method="POST">
-                <p> 
-                    <br> Si vous voulez les CA sur une certaine pÃ©riode veuillez la sÃ©lectionner<br/>
-                    <br>(sinon ils seront affichÃ©s par dÃ©faut sans critÃ¨res de date)</br> 
-                </p>
-                <div>
-                    <label for="dateDeb">Date de dÃ©but :</label>
-                    <input type="date" id="party" name="dateDeb">
-                    <span class="validity"></span>
-                </div>
-                <div>
-                    <label for="dateFin">Date de fin :</label>
-                    <input type="date" id="party" name="dateFin">
-                    <span class="validity"></span>
-                </div>
-                <div>
-                    <input type="submit">
-                </div>
+    <body>
+        <div>
+            <form action="<c:url value="appController"/>" method="GET">
+                <button type="submit" name="action" value="logOut">Se déconnecter</button>
             </form>
-            <!-- Le graphique apparaÃ®t ici -->
-            <div class="graph" id="piechartArticleCat" style="width: 900px; height: 500px;"></div>
-            <a id = "jsonData" href='admin' target="_blank">Voir les donnÃ©es brutes (JSON)</a><br>
-            <div class="graph" id="piechartGeo" style="width: 900px; height: 500px;"></div>
-            <a id = "jsonData" href='admin' target="_blank">Voir les donnÃ©es brutes (JSON)</a><br>
-            <div class="graph" id="piechartCustomer" style="width: 900px; height: 500px;"></div>
-            <a id = "jsonData" href='admin' target="_blank">Voir les donnÃ©es brutes (JSON)</a><br>
-        </body>
-    </center>
-</html>
+        </div>
+        <!-- pÃ©riode (date de dÃ©but / date de fin) sur laquelle doit porter
+la statistique. -->
+        <h1>
+            <b>PAGE ADMINISTRATEUR</b> 
+        </h1>
 
+        <!-- POUR FAIRE CE FORMULAIRE INSPIRE TOI DE USER.JSP -->
+        <form method="POST">
+            <p> 
+                <br> Si vous voulez les CA sur une certaine pÃ©riode veuillez la sÃ©lectionner<br/>
+                <br>(sinon ils seront affichÃ©s par dÃ©faut sans critÃ¨res de date)</br> 
+            </p>
+            <div>
+                <label for="dateDeb">Date de dÃ©but :</label>
+                <input type="date" id="party" name="dateDeb">
+                <span class="validity"></span>
+            </div>
+            <div>
+                <label for="dateFin">Date de fin :</label>
+                <input type="date" id="party" name="dateFin">
+                <span class="validity"></span>
+            </div>
+            <div>
+                <input type="submit">
+            </div>
+        </form>
+
+        <!-- Les graphiques -->
+        <div class="graph" id="piechartArticleCat" style="width: 900px; height: 500px;"></div>
+        <div class="graph" id="piechartGeo" style="width: 900px; height: 500px;"></div>
+        <div class="graph" id="piechartCustomer" style="width: 900px; height: 500px;"></div>
+    </body>
+</html>

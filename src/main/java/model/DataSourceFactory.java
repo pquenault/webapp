@@ -18,7 +18,7 @@ public class DataSourceFactory {
     };
 
     // Choic du type de driver : embedded ou serveur
-    private static final DriverType TYPE = DriverType.server;
+    private static final DriverType TYPE = DriverType.embedded;
 
     /**
      * Renvoie la source de données (server ou embbeded)
