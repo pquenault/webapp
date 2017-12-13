@@ -5,18 +5,12 @@
  */
 package model;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
-import static model.DataSourceFactory.getDataSource;
-import org.hsqldb.cmdline.SqlFile;
-import org.hsqldb.cmdline.SqlToolError;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -26,50 +20,36 @@ import static org.junit.Assert.*;
  */
 public class DAOTest {
     
-    private static DataSource myDataSource;
-    private static Connection myConnection ;
-	
-    private DAO myDAO;
-    
     public DAOTest() {
     }
     
-    @Before
-    public void setUp() throws IOException, SqlToolError, SQLException{
-        // On crée la connection vers la base de test "in memory"
-		myDataSource = getDataSource();
-		myConnection = myDataSource.getConnection();
-		// On crée le schema de la base de test
-		executeSQLScript(myConnection, "export.sql");
-            	myDAO = new DAO(myDataSource);
+    @BeforeClass
+    public static void setUpClass() {
     }
     
-    private void executeSQLScript(Connection connexion, String filename)  throws IOException, SqlToolError, SQLException {
-		// On initialise la base avec le contenu d'un fichier de test
-		String sqlFilePath = DAOTest.class.getResource(filename).getFile();
-		SqlFile sqlFile = new SqlFile(new File(sqlFilePath));
-
-		sqlFile.setConnection(connexion);
-		sqlFile.execute();
-		sqlFile.closeReader();		
-	}
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
     
     @After
-    public void tearDown() throws SQLException {
-        myConnection.close();
+    public void tearDown() {
     }
 
     /**
      * Test of authenticateUser method, of class DAO.
-     * @throws java.lang.Exception
      */
     @Test
     public void testAuthenticateUser() throws Exception {
         System.out.println("authenticateUser");
-        String email = "jumboeagle@example.com";
-        String customerId = "1";
-        String expResult = "Jumbo Eagle Corp";
-        String result = myDAO.authenticateUser(email, customerId);
+        String email = "";
+        String customerId = "";
+        DAO instance = null;
+        String expResult = "";
+        String result = instance.authenticateUser(email, customerId);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -178,7 +158,7 @@ public class DAOTest {
     @Test
     public void testGetProductQuantity() throws Exception {
         System.out.println("getProductQuantity");
-        String productId = "980001";
+        String productId = "";
         DAO instance = null;
         int expResult = 0;
         int result = instance.getProductQuantity(productId);
