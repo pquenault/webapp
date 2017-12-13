@@ -8,6 +8,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Votre compte</title>
         <style>
+            
+            body {
+                font-family: Verdana, Geneva, sans-serif;
+            }
             h1 {
                 font-size : 64px;
                 color : tomato;
@@ -23,7 +27,7 @@
                 color : blue;
             }
             table {
-                box-shadow : 2px 2px 2px grey;
+                box-shadow : 2px 2px 2px grey
             }
             a:link {
                 color : black;
@@ -36,12 +40,29 @@
                 background-color : #f2f2f2;
                 text-decoration : underline;
             }
+            
+            #connectButton {
+                background: none;
+                border: none;
+                background-color: #4075A4;
+                padding: 10px;
+                box-shadow : 2px 2px 2px #82909D;
+                position: relative;
+                float: left;
+            }
+
+            #connectButton:hover {
+                padding: 12px;
+                box-shadow : 5px 2px 2px #82909D;
+                position: relative;
+                float: left;
+            }
         </style>
     </head>
     <body>
         <div>
             <form action="<c:url value="appController"/>" method="GET">
-                <button type="submit" name="action" value="logOut">Se déconnecter</button>
+                <button id="connectButton" type="submit" name="action" value="logOut">Se déconnecter</button>
             </form>
         </div>
         <h1>Votre compte</h1>
